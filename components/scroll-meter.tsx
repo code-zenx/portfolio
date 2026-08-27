@@ -1,11 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Motorcycle } from "@/components/motorcycle";
 
 /**
- * Reading progress, drawn as the header's bottom rule.
- * Writes a CSS var and lets the compositor scale a 1px bar —
- * no React re-render per scroll event.
+ * Reading progress, drawn as the header's bottom rule with a rider on the
+ * leading edge.
+ *
+ * The bar and the rider both read a single `--progress` custom property set
+ * on the container, so they can never disagree. The bar scales (cheap, stays
+ * on the compositor); the rider is positioned instead of scaled, because a
+ * scaled rider would stretch.
  */
 export function ScrollMeter() {
   const ref = useRef<HTMLDivElement>(null);
@@ -40,7 +45,12 @@ export function ScrollMeter() {
     <div
       ref={ref}
       aria-hidden
-      className="scroll-meter absolute inset-x-0 bottom-[-1px] h-px bg-brand"
-    />
+      className="pointer-events-none absolute inset-x-0 bottom-[-1px]"
+    >
+      <span className="scroll-meter block h-px bg-brand" />
+      <span className="scroll-rider absolute bottom-px block">
+        <Motorcycle className="h-[22px] w-[38px] text-heading" />
+      </span>
+    </div>
   );
 }

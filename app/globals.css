@@ -349,11 +349,24 @@
 /* ── interaction primitives ─────────────────────────────────── */
 
 @layer components {
-  /* the header's reading meter, drawn as a rule */
+  /* the header's reading meter: a rule that grows, and a rider on its tip */
   .scroll-meter {
     transform-origin: 0 50%;
     transform: scaleX(var(--progress, 0));
     will-change: transform;
+  }
+
+  /*
+   * Positioned rather than scaled — scaling would stretch the rider.
+   *
+   * Travel is inset by the rider's own width, the way a range thumb is, so it
+   * sits flush at both ends instead of hanging off the left edge at 0% and
+   * being clipped by the viewport at 100%.
+   */
+  .scroll-rider {
+    --rider-w: 38px;
+    left: calc(var(--progress, 0) * (100% - var(--rider-w)));
+    will-change: left;
   }
 
   /* index rail entries light up as their section enters view */
