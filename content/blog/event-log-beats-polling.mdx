@@ -1,0 +1,49 @@
+---
+title: "Polling was the bug, not the symptom"
+summary: "Our media jobs kept dying on worker restarts. Four retries later, the fix was deleting the poller."
+date: "2026-08-14"
+tags: ["Postgres", "Queues", "Postmortem"]
+draft: true
+---
+
+Every long-running job in the pipeline had the same shape: a worker picks up a
+row, marks it `processing`, does twenty minutes of work, marks it `done`. When
+a deploy rolled the workers mid-job, the row stayed `processing` forever.
+
+## The fix that didn't work
+
+The obvious patch is a lease. Add `locked_until`, have the worker heartbeat,
+and let a sweeper reclaim anything stale.
+
+```sql
+update jobs
+   set locked_until = now() + interval '2 minutes'
+ where id = $1 and worker_id = $2;
+```
+
+This works right up until the worker is alive but wedged — the heartbeat keeps
+firing while no progress happens. We shipped it, and the failure just got
+quieter.
+
+## What actually fixed it
+
+The state was the problem. A row that says `processing` is a claim about the
+present, and the present is exactly what a crashed process can't tell you
+about. So we stopped storing state and started storing events:
+
+```sql
+insert into job_events (job_id, kind, at)
+values ($1, 'stage_completed', now());
+```
+
+Current state becomes a fold over the event list. A restart replays from the
+last completed stage instead of guessing whether the previous owner is alive.
+
+> If a value can be wrong after a crash, it should be derived, not stored.
+
+## What it cost
+
+Roughly 300 lines, one migration, and giving up the ability to `select * from
+jobs where status = 'processing'` without a join. Job success over the
+following ninety days went from 96.2% to 99.94%, and the sweeper — along with
+its three separate bug reports — got deleted.

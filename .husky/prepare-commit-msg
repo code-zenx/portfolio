@@ -1,0 +1,4 @@
+# Only prompt when no message was supplied (plain `git commit`).
+if [ -z "$2" ]; then
+  exec < /dev/tty && bunx cz --hook || true
+fi

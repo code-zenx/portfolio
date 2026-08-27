@@ -1,0 +1,42 @@
+---
+title: "Your p95 is lying to you about who's suffering"
+summary: "A gateway that looked healthy in aggregate was failing one tenant completely. Percentiles hide the shape."
+date: "2026-06-02"
+tags: ["Observability", "Go", "Latency"]
+draft: true
+---
+
+The dashboard said p95 was 180ms and flat for a month. A customer said the
+product was unusable. Both were true.
+
+## Aggregates erase tenants
+
+A percentile over all requests answers "how slow is a typical request." It
+does not answer "is anyone having a bad time," and those are different
+questions the moment your traffic is not uniform.
+
+Our largest tenant was 2% of request volume. They could be at four seconds
+across the board and never move the global p95 by a millisecond.
+
+## Slice before you summarize
+
+The change was one label:
+
+```go
+latency.With(prometheus.Labels{
+    "tenant": req.TenantID,
+    "route":  route,
+}).Observe(elapsed.Seconds())
+```
+
+Cardinality is the usual objection, and it is a real one — this is fine at
+hundreds of tenants and a disaster at millions. For the millions case,
+aggregate to a per-tenant *max* on a rolling window and alert on that instead.
+
+## The number worth watching
+
+We now alert on the worst tenant's p95, not the global one. It is a noisier
+signal and it has caught three incidents that the global view slept through.
+
+The general form: when you summarize across a dimension your users can feel,
+you have to keep at least one statistic that survives the summary.

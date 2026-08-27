@@ -1,0 +1,15 @@
+echo '✔︎ Type checking...'
+bun run check:types || {
+  echo '❌ Type check failed.'
+  exit 1
+}
+
+echo '✔︎ Running checks...'
+bun run check:parametric >/dev/null || {
+  echo '❌ Parametric preset check failed.'
+  exit 1
+}
+bun run check:cmdk >/dev/null || {
+  echo '❌ cmdk provider check failed.'
+  exit 1
+}

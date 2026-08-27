@@ -1,0 +1,7 @@
+bunx --no-install commitlint --edit "$1" || {
+  echo "❌ Commit message validation failed. Follow Conventional Commits."
+  echo "   Example: feat: add project filter"
+  echo "   Types:   feat, fix, docs, style, refactor, perf, test, chore, build, ci, revert"
+  echo "   Note:    a body is required, and both subject and body are lower-case."
+  exit 1
+}
