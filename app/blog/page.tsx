@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { postMeta } from "@/lib/posts";
+import { postMeta } from "@/features/blog/posts.server";
 import { longDate } from "@/lib/format";
 
 export const metadata: Metadata = {

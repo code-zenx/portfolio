@@ -1,3 +1,8 @@
+// Server only. This module reads content/blog, so importing it from a client
+// component drags node:fs into the browser bundle — which fails the build
+// with an unhelpful chunking error. This import makes it fail clearly.
+import "server-only";
+
 import { cache } from "react";
 import { isDev, readCollection, readingMinutes, str, strArray } from "@/lib/content";
 

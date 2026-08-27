@@ -1,5 +1,5 @@
-import { facts, profile } from "@/lib/site";
-import { AttractorPlate } from "@/components/common/attractor-plate";
+import { facts, profile } from "@/config/site";
+import { AttractorPlate } from "@/features/attractor/attractor-plate";
 
 export function Hero() {
   return (

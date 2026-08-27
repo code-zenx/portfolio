@@ -1,5 +1,5 @@
-import { Section } from "@/components/common/section";
-import { stack } from "@/lib/site";
+import { Section } from "@/components/section";
+import { stack } from "@/config/site";
 
 export function Stack() {
   const total = stack.reduce((n, g) => n + g.items.length, 0);

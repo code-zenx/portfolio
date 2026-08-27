@@ -1,3 +1,8 @@
+// Server only. This module reads the content directory, so importing it from a client
+// component drags node:fs into the browser bundle — which fails the build
+// with an unhelpful chunking error. This import makes it fail clearly.
+import "server-only";
+
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";

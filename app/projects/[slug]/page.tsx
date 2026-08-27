@@ -3,10 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
-import { Icon } from "@/components/common/icon";
-import { allProjects, getProject, KIND_LABEL } from "@/lib/projects";
+import { Icon } from "@/components/icon/icon";
+import { allProjects, getProject, KIND_LABEL } from "@/features/projects/projects.server";
 import { prettyCodeOptions } from "@/lib/mdx";
-import { profile } from "@/lib/site";
+import { profile } from "@/config/site";
 
 export const dynamicParams = false;
 

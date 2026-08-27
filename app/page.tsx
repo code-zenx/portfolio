@@ -1,12 +1,12 @@
-import { Hero } from "@/components/sections/hero";
-import { Work } from "@/components/sections/work";
-import { Projects } from "@/components/sections/projects";
-import { Experience } from "@/components/sections/experience";
-import { Stack } from "@/components/sections/stack";
-import { Writing } from "@/components/sections/writing";
-import { Contact } from "@/components/sections/contact";
-import { postMeta } from "@/lib/posts";
-import { projectMeta } from "@/lib/projects";
+import { Hero } from "@/features/home/hero";
+import { Work } from "@/features/home/work";
+import { Projects } from "@/features/projects/projects-section";
+import { Experience } from "@/features/home/experience";
+import { Stack } from "@/features/home/stack";
+import { Writing } from "@/features/blog/writing-section";
+import { Contact } from "@/features/home/contact";
+import { postMeta } from "@/features/blog/posts.server";
+import { projectMeta } from "@/features/projects/projects.server";
 
 export default function Home() {
   const projects = projectMeta();

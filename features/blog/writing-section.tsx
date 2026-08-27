@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { Icon } from "@/components/common/icon";
-import { Section } from "@/components/common/section";
-import type { PostMeta } from "@/lib/posts";
+import { Icon } from "@/components/icon/icon";
+import { Section } from "@/components/section";
+import type { PostMeta } from "@/features/blog/posts.server";
 import { longDate } from "@/lib/format";
 
 export function Writing({ posts, total }: { posts: PostMeta[]; total: number }) {

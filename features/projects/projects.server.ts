@@ -1,8 +1,13 @@
+// Server only. This module reads content/projects, so importing it from a client
+// component drags node:fs into the browser bundle — which fails the build
+// with an unhelpful chunking error. This import makes it fail clearly.
+import "server-only";
+
 import { cache } from "react";
 import { isDev, readCollection, str, strArray } from "@/lib/content";
 
-export * from "@/lib/project-kinds";
-import { KINDS, type Kind, type Project, type ProjectMeta } from "@/lib/project-kinds";
+export * from "@/features/projects/types";
+import { KINDS, type Kind, type Project, type ProjectMeta } from "@/features/projects/types";
 
 function parseLinks(v: unknown): { label: string; href: string }[] {
   if (!Array.isArray(v)) return [];

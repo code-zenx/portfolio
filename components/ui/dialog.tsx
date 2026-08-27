@@ -5,7 +5,7 @@ import { Dialog as DialogPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Icon } from "@/components/common/icon"
+import { Icon } from "@/components/icon/icon"
 
 function Dialog({
   ...props

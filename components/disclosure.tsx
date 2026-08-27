@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@/components/common/icon";
+import { Icon } from "@/components/icon/icon";
 import type { ReactNode } from "react";
 
 type Props = {

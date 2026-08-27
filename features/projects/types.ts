@@ -1,5 +1,5 @@
 // Client-safe half of the projects module: types and lookup tables only.
-// lib/projects.ts touches node:fs, so anything a client component needs
+// projects.server.ts touches node:fs, so anything a client component needs
 // has to live here or the reader gets pulled into the browser bundle.
 
 export const KINDS = ["app", "package", "extension", "desktop", "plugin"] as const;

@@ -15,7 +15,7 @@ import {
   InputGroup,
   InputGroupAddon,
 } from "@/components/ui/input-group"
-import { Icon } from "@/components/common/icon"
+import { Icon } from "@/components/icon/icon"
 
 function Command({
   className,

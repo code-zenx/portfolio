@@ -1,7 +1,7 @@
 /**
  * Parametric particle field — the six presets from the Omarchy Plugins hero.
  *
- * Pure math, no DOM, so the canvas component and scripts/parametric-check.ts
+ * Pure math, no DOM, so the canvas component and parametric.check.ts
  * run exactly the same code.
  */
 

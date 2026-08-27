@@ -8,7 +8,7 @@ import {
   TIME_SCALE,
   place,
   pointAt,
-} from "@/lib/parametric";
+} from "@/features/attractor/parametric";
 
 /**
  * Parametric particle field. Six presets, click to cycle.
@@ -170,6 +170,18 @@ export function Attractor() {
       className="group relative block h-[270px] w-full cursor-pointer overflow-hidden bg-transparent text-left focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand"
     >
       <canvas ref={canvasRef} className="block h-full w-full opacity-[0.84]" />
+
+      {/* preset rail — the tick marks which of the six is showing, so the
+          position reads at a glance without parsing the counter */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute bottom-7 left-1 top-7 w-px bg-ink-3/40"
+      >
+        <span
+          className="absolute -left-[3px] block h-px w-[7px] bg-brand transition-[top] duration-300 ease-out"
+          style={{ top: `${(index / (PRESETS.length - 1)) * 100}%` }}
+        />
+      </span>
 
       <span
         aria-hidden

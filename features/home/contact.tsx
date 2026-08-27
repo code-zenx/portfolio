@@ -1,4 +1,4 @@
-import { profile } from "@/lib/site";
+import { profile } from "@/config/site";
 
 const links = [
   { label: profile.email, href: `mailto:${profile.email}` },

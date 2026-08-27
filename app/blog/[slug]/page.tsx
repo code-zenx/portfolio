@@ -3,11 +3,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
-import { Icon } from "@/components/common/icon";
-import { allPosts, getPost } from "@/lib/posts";
+import { Icon } from "@/components/icon/icon";
+import { allPosts, getPost } from "@/features/blog/posts.server";
 import { prettyCodeOptions } from "@/lib/mdx";
 import { longDate } from "@/lib/format";
-import { profile } from "@/lib/site";
+import { profile } from "@/config/site";
 
 export const dynamicParams = false;
 

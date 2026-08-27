@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Icon } from "@/components/common/icon";
-import { KIND_LABEL, type Kind, type ProjectMeta } from "@/lib/project-kinds";
+import { Icon } from "@/components/icon/icon";
+import { KIND_LABEL, type Kind, type ProjectMeta } from "@/features/projects/types";
 
 export function ProjectIndex({ projects }: { projects: ProjectMeta[] }) {
   const [kind, setKind] = useState<Kind | null>(null);

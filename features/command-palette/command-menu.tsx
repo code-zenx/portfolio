@@ -2,12 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import type { PostMeta } from "@/lib/posts";
-import type { ProjectMeta } from "@/lib/project-kinds";
+import type { PostMeta } from "@/features/blog/posts.server";
+import type { ProjectMeta } from "@/features/projects/types";
 
 /** cmdk + the dialog are ~15kB of the bundle nobody needs on first paint. */
 const CommandPalette = dynamic(
-  () => import("@/components/command-palette").then((m) => m.CommandPalette),
+  () => import("@/features/command-palette/command-palette").then((m) => m.CommandPalette),
   { ssr: false },
 );
 

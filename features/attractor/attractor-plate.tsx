@@ -1,11 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useMounted } from "@/components/common/use-mounted";
+import { useMounted } from "@/lib/use-mounted";
 
 // Canvas work never needs to be in the first-paint bundle.
 const Attractor = dynamic(
-  () => import("@/components/common/attractor").then((m) => m.Attractor),
+  () => import("@/features/attractor/attractor").then((m) => m.Attractor),
   { ssr: false },
 );
 

@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Icon } from "@/components/common/icon";
+import { Icon } from "@/components/icon/icon";
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { ScrollMeter } from "@/components/layout/scroll-meter";
-import { PALETTE_OPEN } from "@/components/command-menu";
-import { nav, profile } from "@/lib/site";
+import { ThemeToggle } from "@/features/theme/theme-toggle";
+import { ScrollMeter } from "@/components/scroll-meter";
+import { PALETTE_OPEN } from "@/features/command-palette/command-menu";
+import { nav, profile } from "@/config/site";
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);

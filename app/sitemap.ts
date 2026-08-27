@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 // Required by `output: export` — these are files on disk, not routes.
 export const dynamic = "force-static";
-import { postMeta } from "@/lib/posts";
-import { projectMeta } from "@/lib/projects";
-import { profile } from "@/lib/site";
+import { postMeta } from "@/features/blog/posts.server";
+import { projectMeta } from "@/features/projects/projects.server";
+import { profile } from "@/config/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = postMeta().map((p) => ({

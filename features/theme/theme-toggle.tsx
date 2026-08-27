@@ -1,8 +1,8 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { Icon } from "@/components/common/icon";
-import { useMounted } from "@/components/common/use-mounted";
+import { Icon } from "@/components/icon/icon";
+import { useMounted } from "@/lib/use-mounted";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();

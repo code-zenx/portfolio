@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { profile } from "@/lib/site";
+import { profile } from "@/config/site";
 
 export function SiteFooter() {
   return (

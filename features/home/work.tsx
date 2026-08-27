@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Section } from "@/components/common/section";
-import { projects } from "@/lib/site";
+import { Section } from "@/components/section";
+import { projects } from "@/config/site";
 
 export function Work() {
   const [filter, setFilter] = useState<string | null>(null);

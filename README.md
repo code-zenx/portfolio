@@ -8,21 +8,68 @@ bun dev          # http://localhost:3000
 bun run build
 ```
 
-## Where things live
+## Project structure
 
-| Path | What |
-|---|---|
-| `lib/site.ts` | Résumé content — profile, work, roles, stack, nav. |
-| `content/blog/*.mdx` | Blog posts. Filename is the slug. |
-| `content/projects/*.mdx` | Projects, packages, extensions. Filename is the slug. |
-| `lib/content.ts` | Shared MDX collection reader. |
-| `lib/posts.ts`, `lib/projects.ts` | Per-collection parsers. Server only — they touch `node:fs`. |
-| `lib/project-kinds.ts` | Client-safe project types. Import from here in `"use client"` files. |
-| `lib/icons.generated.ts` | Icon subset. Regenerate with `bun run icons`. |
-| `app/globals.css` | The Broadsheet theme. shadcn token names, Broadsheet values. |
-| `components/section.tsx` | The ruled section with the numbered index rail. |
+Organised by **what a file is for**, not what it is. A feature owns its
+components, its data layer and its check, so removing one is `rm -rf` on a
+single directory plus the import that referenced it.
 
-## Writing a post
+```
+app/                     routing only — thin files that delegate
+  layout.tsx  page.tsx  globals.css
+  robots.ts   sitemap.ts
+  blog/       projects/
+
+content/                 what you edit most — posts and projects, as MDX
+config/site.ts           résumé content: profile, work, roles, stack, nav
+
+features/                domain code, self-contained
+  home/                  hero · work · experience · stack · contact
+  blog/                  posts.server.ts · writing-section.tsx
+  projects/              projects.server.ts · types.ts · project-index.tsx
+  attractor/             parametric.ts · parametric.check.ts · canvas
+  command-palette/       command-menu.tsx · cmdk.check.tsx
+  theme/                 provider · toggle
+
+components/              generic, no domain knowledge
+  ui/                    shadcn — regenerated, don't hand-edit
+  icon/                  icon.tsx — one wrapper over react-icons/lu
+  section · disclosure · scroll-meter · site-header · site-footer
+
+lib/                     pure helpers: content · mdx · format · utils · use-mounted
+```
+
+### Conventions
+
+**`import "server-only"`** heads every module that touches the filesystem
+(`lib/content.ts`, `posts.server.ts`, `projects.server.ts`). Import one from a
+client component and you get a clear error naming the file, instead of
+Turbopack failing with *"the chunking context does not support external
+modules"* — which is what happens when `node:fs` reaches a browser chunk.
+
+**`*.server.ts` and `types.ts`** make the split self-documenting. Client
+components import types from `features/projects/types.ts`; only server
+components touch `projects.server.ts`.
+
+**`*.check.ts` sits beside what it guards**, so deleting a feature deletes its
+test. There is no `scripts/` directory.
+
+**No barrel files.** No `index.ts` re-exports — they defeat tree-shaking and
+fight `optimizePackageImports`. Import the real path.
+
+### Feature dependencies
+
+Only three edges, all deliberate:
+
+```
+home             → attractor          hero renders the canvas
+command-palette  → blog, projects     it lists posts and projects
+```
+
+Everything else is a leaf. Delete `features/attractor/` and only `hero.tsx`
+breaks.
+
+## Writing a post## Writing a post
 
 Create `content/blog/my-post.mdx`:
 
@@ -72,12 +119,21 @@ The body is optional. Write one and the project gets a page at
 
 ## Icons
 
-`@iconify/react/offline` plus a generated subset. Nothing is fetched from
-iconify.design at runtime.
+`react-icons/lu` (Lucide), imported as static named exports through one
+wrapper at `components/icon/icon.tsx`.
 
-Adding an icon: add its Lucide name to `NAMES` in
-`scripts/generate-icons.ts`, then `bun run icons`. `IconName` is generated
-from that list, so a typo is a type error rather than a missing glyph.
+```tsx
+<Icon name="arrow-up-right" className="h-3 w-3" />
+```
+
+Adding one: import the `Lu*` export and add a kebab-case entry to the `ICONS`
+map in that file. `IconName` is derived from the map with `keyof typeof`, so a
+typo at a call site is a compile error.
+
+Tree-shaking is real here and was verified rather than assumed — the built
+chunks contain the path data for icons in use and none for the ~1,526 that
+aren't. Measured at ~1.8 kB gzipped for the 15 icons in use, out of a 793 kB
+module.
 
 ## Releasing
 
@@ -199,12 +255,12 @@ for body text; `#ff6b5e` is 6.4:1.
 
 ## Before this ships
 
-- Fill the `METRICS_TODO` block at the bottom of `lib/site.ts` — the résumé's
+- Fill the `METRICS_TODO` block at the bottom of `config/site.ts` — the résumé's
   unfilled `[X]` figures. Every bullet reads correctly without them today; none
   of them claims a number it can't back.
-- Set the real `linkedin` and `siteUrl` in `lib/site.ts`.
+- Set the real `linkedin` and `siteUrl` in `config/site.ts`.
 - Add `public/resume.pdf`, or drop the résumé link from the contact section.
 - The two posts in `content/blog` are `draft: true` — they are sample writing,
   not yours. They render in `bun dev` and are hidden in production. Delete them
   or replace them before launch.
-- `profile.phone` exists in `lib/site.ts` but is deliberately never rendered.
+

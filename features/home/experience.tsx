@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Section } from "@/components/common/section";
-import { Disclosure } from "@/components/common/disclosure";
-import { roles } from "@/lib/site";
+import { Section } from "@/components/section";
+import { Disclosure } from "@/components/disclosure";
+import { roles } from "@/config/site";
 
 export function Experience() {
   // Six roles of bullets is a wall. Current role open, history collapsed —

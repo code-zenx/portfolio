@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { ProjectIndex } from "@/components/sections/project-index";
-import { projectMeta } from "@/lib/projects";
+import { ProjectIndex } from "@/features/projects/project-index";
+import { projectMeta } from "@/features/projects/projects.server";
 
 export const metadata: Metadata = {
   title: "Projects",

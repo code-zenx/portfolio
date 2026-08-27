@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { Icon } from "@/components/common/icon";
+import { Icon } from "@/components/icon/icon";
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,9 +11,9 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import type { PostMeta } from "@/lib/posts";
-import { KIND_LABEL, type ProjectMeta } from "@/lib/project-kinds";
-import { nav, profile } from "@/lib/site";
+import type { PostMeta } from "@/features/blog/posts.server";
+import { KIND_LABEL, type ProjectMeta } from "@/features/projects/types";
+import { nav, profile } from "@/config/site";
 
 type Props = {
   open: boolean;

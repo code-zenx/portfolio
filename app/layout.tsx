@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/layout/theme-provider";
-import { SiteHeader } from "@/components/layout/site-header";
-import { SiteFooter } from "@/components/layout/site-footer";
-import { CommandMenu } from "@/components/command-menu";
-import { postMeta } from "@/lib/posts";
-import { projectMeta } from "@/lib/projects";
-import { profile } from "@/lib/site";
+import { ThemeProvider } from "@/features/theme/theme-provider";
+import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site-footer";
+import { CommandMenu } from "@/features/command-palette/command-menu";
+import { postMeta } from "@/features/blog/posts.server";
+import { projectMeta } from "@/features/projects/projects.server";
+import { profile } from "@/config/site";
 import "./globals.css";
 
 const text = Inter({

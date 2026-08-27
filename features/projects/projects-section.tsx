@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Icon } from "@/components/common/icon";
-import { Section } from "@/components/common/section";
-import { ProjectRow } from "@/components/sections/project-index";
-import type { ProjectMeta } from "@/lib/project-kinds";
+import { Icon } from "@/components/icon/icon";
+import { Section } from "@/components/section";
+import { ProjectRow } from "@/features/projects/project-index";
+import type { ProjectMeta } from "@/features/projects/types";
 
 export function Projects({
   projects,

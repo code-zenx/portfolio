@@ -15,7 +15,7 @@ import {
   TIME_SCALE,
   place,
   pointAt,
-} from "@/lib/parametric";
+} from "@/features/attractor/parametric";
 
 const W = 360;
 const H = 270;
