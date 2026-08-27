@@ -9,17 +9,19 @@ const links = [
 
 export function Contact() {
   return (
-    <section id="contact" className="scroll-mt-16">
-      <div className="mx-auto max-w-[1080px] px-5 py-20 md:px-10">
+    <section id="contact" className="scroll-mt-[var(--header-h)]">
+      <div className="mx-auto max-w-[1080px] px-5 md:px-10">
+        <div className="border-t border-rule-hair py-20">
         <h2 className="display max-w-[16ch] text-balance text-[length:var(--text-h1)]">
           Tell me what&apos;s breaking.
         </h2>
-        <div className="mt-9 flex flex-wrap gap-x-8 gap-y-2 border-t border-rule pt-5 text-[15px]">
+        <div className="mt-9 flex flex-wrap gap-x-8 gap-y-2 border-t border-rule-hair pt-5 text-[15px]">
           {links.map((l) => (
             <a key={l.label} href={l.href} className="link-rule text-brand">
               {l.label}
             </a>
           ))}
+          </div>
         </div>
       </div>
     </section>

@@ -22,6 +22,7 @@
   --color-ink-2: var(--ink-2);
   --color-ink-3: var(--ink-3);
   --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
   --color-rule-hair: var(--rule-hair);
   --color-brand: var(--brand);
   --color-brand-ink: var(--brand-ink);
@@ -80,11 +81,21 @@
 }
 
 :root {
+  /* Sticky header height, including its 1px bottom rule. Anchor targets use
+     the same value, so a section's boundary rule lands exactly under the
+     header's instead of leaving a strip of the previous section showing. */
+  --header-h: 53px;
+
   --heading: #0a0a0a;
   --paper-2: #f2f1ec;
   --ink-2: #4a4a46;
   --ink-3: #8a8a83;
-  --rule: #0a0a0a;
+  /* Three weights, not two. Full ink was doing four different jobs at once,
+     so nothing read as more important than anything else. Reserve
+     --rule-strong for the section-head underline; everything structural
+     sits on --rule, and rows sit on --rule-hair. */
+  --rule-strong: #0a0a0a;
+  --rule: rgba(10, 10, 10, 0.32);
   --rule-hair: rgba(10, 10, 10, 0.16);
   --brand: #e2483d;
   --brand-ink: #fbfbf9;
@@ -128,7 +139,8 @@
   --paper-2: #191918;
   --ink-2: #a8a7a1;
   --ink-3: #86857f;
-  --rule: #f2f1ed;
+  --rule-strong: #f2f1ed;
+  --rule: rgba(242, 241, 237, 0.34);
   --rule-hair: rgba(242, 241, 237, 0.18);
   --brand: #ff6b5e;
   --brand-ink: #101010;
@@ -222,17 +234,15 @@
 
   /* Section header: eyebrow, a rule that runs the full width, and a count.
      Replaces the 180px numeral gutter, which held no information. */
+  /* One rule, not two: this used to carry a hairline between the label and
+     the count as well as its own underline, ~10px apart. */
   .sec-head {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.875rem;
     padding-bottom: 0.625rem;
-    border-bottom: 1px solid var(--rule);
-  }
-  .sec-head-rule {
-    flex: 1;
-    height: 1px;
-    background: var(--rule-hair);
+    border-bottom: 1px solid var(--rule-strong);
   }
 
   .badge {

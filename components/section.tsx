@@ -16,11 +16,11 @@ type Props = {
  */
 export function Section({ id, label, title, count, children }: Props) {
   return (
-    <section id={id} className="scroll-mt-16 border-b border-rule">
-      <div className="mx-auto max-w-[1080px] px-5 py-14 md:px-10">
+    <section id={id} className="scroll-mt-[var(--header-h)]">
+      <div className="mx-auto max-w-[1080px] px-5 md:px-10">
+        <div className="border-t border-rule-hair py-20">
         <div className="sec-head">
           <span className="label">{label}</span>
-          <span className="sec-head-rule" />
           {count ? (
             <span className="label tabular-nums">{count}</span>
           ) : null}
@@ -30,7 +30,8 @@ export function Section({ id, label, title, count, children }: Props) {
           {title}
         </h2>
 
-        <div className="mt-8">{children}</div>
+          <div className="mt-8">{children}</div>
+        </div>
       </div>
     </section>
   );

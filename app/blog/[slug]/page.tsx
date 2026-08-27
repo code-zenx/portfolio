@@ -51,7 +51,7 @@ export default async function PostPage(props: PageProps<"/blog/[slug]">) {
 
   return (
     <article>
-      <header className="border-b border-rule">
+      <header>
         <div className="mx-auto max-w-[1080px] px-5 pb-11 pt-16 md:px-10">
           <Link
             href="/blog"
@@ -65,7 +65,7 @@ export default async function PostPage(props: PageProps<"/blog/[slug]">) {
             {post.title}
           </h1>
 
-          <div className="mt-8 flex flex-wrap gap-x-7 gap-y-2 border-t border-rule pt-4 text-[12px] uppercase tracking-[0.08em] tabular-nums text-ink-3">
+          <div className="mt-8 flex flex-wrap gap-x-7 gap-y-2 border-t border-rule-hair pt-4 text-[12px] uppercase tracking-[0.08em] tabular-nums text-ink-3">
             <time dateTime={post.date}>{longDate(post.date)}</time>
             <span>{post.readingMinutes} min read</span>
             {post.tags.map((t) => (

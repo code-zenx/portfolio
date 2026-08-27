@@ -3,8 +3,8 @@ import { AttractorPlate } from "@/features/attractor/attractor-plate";
 
 export function Hero() {
   return (
-    <section id="top" className="border-b border-rule">
-      <div className="mx-auto max-w-[1080px] px-5 pb-12 pt-16 md:px-10">
+    <section id="top">
+      <div className="mx-auto max-w-[1080px] px-5 pb-20 pt-16 md:px-10">
         <p className="label mb-6 flex items-center gap-3.5">
           {profile.role} · {profile.location}
           <span className="h-px flex-1 bg-rule-hair" />
@@ -27,7 +27,7 @@ export function Hero() {
           <AttractorPlate />
         </div>
 
-        <dl className="mt-11 grid grid-cols-2 border-y border-rule md:grid-cols-4">
+        <dl className="mt-11 grid grid-cols-2 border-t border-rule-hair md:grid-cols-4">
           {facts.map((f, i) => (
             <div
               key={f.label}

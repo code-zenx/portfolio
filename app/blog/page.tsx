@@ -15,7 +15,7 @@ export default function BlogIndex() {
 
   return (
     <>
-      <section className="border-b border-rule">
+      <section>
         <div className="mx-auto max-w-[1080px] px-5 pb-12 pt-20 md:px-10">
           <p className="label mb-7 flex items-center gap-3">
             Writing
@@ -40,7 +40,7 @@ export default function BlogIndex() {
               No posts yet. Add an .mdx file to content/blog.
             </p>
           ) : (
-            <div className="border-t border-rule">
+            <div className="border-t border-rule-hair">
               {posts.map((p) => (
                 <Link
                   key={p.slug}

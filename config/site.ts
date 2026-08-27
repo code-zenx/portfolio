@@ -9,8 +9,23 @@
 
 export type Project = {
   id: string;
-  /** Short category chip. Carries the hook so a row scans without reading. */
+  /**
+   * The row's hook, read before anything else. Prefer a metric over a
+   * category — "75+ languages" earns a second of attention, "integrations"
+   * does not. Several are still categories only because the number is
+   * unfilled; see METRICS_TODO.
+   */
   badge: string;
+  /** Renders full width with its capability list. At most one. */
+  feature?: boolean;
+  /**
+   * Slug of the blog post that goes deep on this — the problem, what was
+   * tried, what shipped. The row links to it only when that post exists and
+   * is published, so an unwritten write-up never leaves a dead link.
+   */
+  writeup?: string;
+  /** Capability bullets. Only shown on the feature row. */
+  points?: string[];
   title: string;
   blurb: string;
   tags: string[];
@@ -86,18 +101,25 @@ export const projects: Project[] = [
   {
     id: "universe",
     badge: "Flagship",
+    feature: true,
+    points: [
+      "Combined RBAC and ABAC across an org / workspace / service hierarchy",
+      "Usage-metered billing: plan management, top-ups, per-service consumption",
+      "Structured logging and distributed tracing on OpenObserve",
+      "Containerised monorepo so services deploy independently",
+    ],
     title: "Universe — unified enterprise platform",
     blurb:
-      "Consolidated three standalone products — video dubbing, subtitling, and design-file translation — into one multi-tenant system, which opened the company's first enterprise partnership deals. Built the authorization layer from scratch: combined RBAC and ABAC across an org / workspace / service hierarchy.",
+      "Consolidated three standalone products — dubbing, subtitling and design-file translation — into one multi-tenant system, which opened the company's first enterprise deals.",
     tags: ["NestJS", "PostgreSQL", "Multi-tenant", "RBAC + ABAC"],
     stat: { value: "3", label: "products consolidated" },
   },
   {
     id: "editor",
-    badge: "Long-form",
+    badge: "75+ languages",
     title: "Long-form video editor",
     blurb:
-      "Re-engineered the dubbing web client to handle 2+ hour videos across 75+ languages. Moved video, audio, and background-audio processing into Web Workers and rendered frames via OffscreenCanvas, killing the main-thread blocking that froze the editor on long content. Timeline virtualization — sliding-window rendering with paginated infinite scroll — carried the rest.",
+      "Moved video, audio and background-audio processing into Web Workers and OffscreenCanvas so the dubbing editor stops freezing on 2+ hour content.",
     tags: ["Web Workers", "OffscreenCanvas", "React", "Virtualization"],
     stat: { value: "2h+", label: "video, no main-thread block" },
   },
@@ -106,7 +128,7 @@ export const projects: Project[] = [
     badge: "Async DAGs",
     title: "AI pipeline orchestration",
     blurb:
-      "Modeled transcription → translation → synthesis as DAGs on Conductor OSS, with retry semantics and per-stage observability, replacing ad-hoc queueing. Each stage fails and recovers on its own instead of taking the job down with it.",
+      "Modelled transcription → translation → synthesis as Conductor OSS DAGs, so a stage fails and recovers without taking the whole job down.",
     tags: ["Conductor OSS", "DAGs", "Kafka", "BullMQ"],
     stat: { value: "3-stage", label: "DAG per job" },
   },
@@ -115,7 +137,7 @@ export const projects: Project[] = [
     badge: "Cost",
     title: "Translation memory",
     blurb:
-      "Segment-level reuse in the shape of Phrase's TM, so repeated content stops paying for inference twice. Cut redundant LLM and API calls, and with them the per-job cost.",
+      "Segment-level reuse in the shape of Phrase's TM, so repeated content stops paying for inference twice.",
     tags: ["PostgreSQL", "LLMs", "Cost"],
   },
   {
@@ -123,7 +145,7 @@ export const projects: Project[] = [
     badge: "Integrations",
     title: "Design-tool plugin surface",
     blurb:
-      "Unified the Figma, Photoshop, Illustrator, and InDesign integrations behind one shared API, collapsing four duplicated codepaths into a single one to maintain.",
+      "Figma, Photoshop, Illustrator and InDesign behind one shared API, collapsing four duplicated codepaths into one.",
     tags: ["TypeScript", "Plugin APIs"],
     stat: { value: "4", label: "design tools, one API" },
   },
@@ -132,7 +154,7 @@ export const projects: Project[] = [
     badge: "Internal",
     title: "Sale Rocket — call analytics",
     blurb:
-      "Led development of a sales-call analytics platform that transcribes and analyzes calls, surfacing performance metrics and actionable follow-ups for the sales team.",
+      "Sales-call analytics that transcribes and analyses calls, surfacing performance metrics and actionable follow-ups for the team.",
     tags: ["Python", "NLP", "LLMs"],
   },
 ];

@@ -14,7 +14,7 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <section className="border-b border-rule">
+      <section>
         <div className="mx-auto max-w-[1080px] px-5 pb-12 pt-20 md:px-10">
           <p className="label mb-7 flex items-center gap-3">
             Projects

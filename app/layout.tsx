@@ -3,6 +3,7 @@ import { Instrument_Serif, Inter } from "next/font/google";
 import { ThemeProvider } from "@/features/theme/theme-provider";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { ScrollMeter } from "@/components/scroll-meter";
 import { CommandMenu } from "@/features/command-palette/command-menu";
 import { postMeta } from "@/features/blog/posts.server";
 import { projectMeta } from "@/features/projects/projects.server";
@@ -83,6 +84,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeader />
           <main className="flex-1">{children}</main>
           <SiteFooter />
+          <ScrollMeter />
           <CommandMenu posts={postMeta()} projects={projectMeta()} />
         </ThemeProvider>
         <script

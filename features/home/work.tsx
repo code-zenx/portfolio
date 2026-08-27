@@ -1,11 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
+import { Icon } from "@/components/icon/icon";
 import { Section } from "@/components/section";
-import { projects } from "@/config/site";
+import { projects, type Project } from "@/config/site";
+import type { PostMeta } from "@/features/blog/posts.server";
 
-export function Work() {
+/** Rows shown before "show all". Keeps the section a scan, not a scroll. */
+const HOME_LIMIT = 5;
+
+export function Work({ posts }: { posts: PostMeta[] }) {
   const [filter, setFilter] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState(false);
 
   // A chip per tag meant 17 controls filtering 6 rows. Only tags that
   // actually split the set are worth a control.
@@ -21,7 +28,20 @@ export function Work() {
       .map(([t]) => t);
   }, []);
 
-  const shown = filter ? projects.filter((p) => p.tags.includes(filter)) : projects;
+  // Only link a write-up that actually exists and is published — a slug
+  // pointing at a draft or a deleted post would otherwise 404.
+  const published = useMemo(
+    () => new Map(posts.map((p) => [p.slug, p])),
+    [posts],
+  );
+
+  const matching = filter
+    ? projects.filter((p) => p.tags.includes(filter))
+    : projects;
+
+  // Filtering has already narrowed the set, so don't truncate on top of it.
+  const shown = filter || expanded ? matching : matching.slice(0, HOME_LIMIT);
+  const hidden = matching.length - shown.length;
 
   return (
     <Section
@@ -46,53 +66,123 @@ export function Work() {
       </div>
 
       <div className="border-t border-rule-hair">
-        {shown.map((p) => (
-          <article
-            key={p.id}
-            /* three populated columns — the old two-column row left ~390px
-               of dead air in the middle of every entry */
-            className="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-rule-hair py-6 md:grid-cols-[100px_minmax(0,1fr)_158px]"
-          >
-            <div>
-              <span className="badge">{p.badge}</span>
-            </div>
-
-            <div className="min-w-0">
-              <h3 className="text-[1.0625rem] font-semibold leading-snug tracking-[-0.01em] text-heading">
-                {p.title}
-              </h3>
-              <p className="mt-1.5 max-w-[62ch] text-[0.9375rem] leading-[1.6] text-ink-2">
-                {p.blurb}
-              </p>
-              <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 text-[0.6875rem] uppercase tracking-[0.1em] text-ink-3">
-                {p.tags.map((t) => (
-                  <span key={t} className={t === filter ? "text-brand" : undefined}>
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="md:text-right">
-              {p.stat ? (
-                <>
-                  <span className="block text-[1.5rem] font-semibold leading-none tracking-[-0.03em] text-heading tabular-nums">
-                    {p.stat.value}
-                  </span>
-                  <span className="mt-1.5 block text-[0.75rem] leading-snug text-ink-3">
-                    {p.stat.label}
-                  </span>
-                </>
-              ) : null}
-            </div>
-          </article>
-        ))}
+        {shown.map((p) =>
+          // The feature row only makes sense unfiltered — once you have
+          // narrowed the set, every remaining row is equally relevant.
+          p.feature && !filter ? (
+            <Row key={p.id} project={p} post={published.get(p.writeup ?? "")} feature />
+          ) : (
+            <Row
+              key={p.id}
+              project={p}
+              post={published.get(p.writeup ?? "")}
+              filter={filter}
+            />
+          ),
+        )}
       </div>
 
-      {shown.length === 0 ? (
+      {hidden > 0 ? (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="link-rule mt-6 inline-flex cursor-pointer items-center gap-1.5 text-[0.75rem] font-semibold uppercase tracking-[0.12em] text-ink-2"
+        >
+          Show {hidden} more
+          <Icon name="plus" className="h-3 w-3" />
+        </button>
+      ) : null}
+
+      {matching.length === 0 ? (
         <p className="py-6 text-ink-3">Nothing tagged {filter}.</p>
       ) : null}
     </Section>
+  );
+}
+
+function Row({
+  project: p,
+  post,
+  filter = null,
+  feature = false,
+}: {
+  project: Project;
+  post?: PostMeta;
+  filter?: string | null;
+  feature?: boolean;
+}) {
+  return (
+    <article
+      /* Two columns, not three. The badge used to own a 100px column for a
+         four-character word; it reads better as an eyebrow. The stat column
+         only exists when there is a stat, so a row without one no longer
+         leaves a hole on the right. */
+      className={`grid grid-cols-1 gap-x-10 gap-y-3 border-b border-rule-hair ${
+        feature ? "py-8" : "py-6"
+      } ${p.stat ? "md:grid-cols-[minmax(0,1fr)_140px]" : ""}`}
+    >
+      <div className="min-w-0">
+        <span className="label mb-2 block text-brand">{p.badge}</span>
+
+        <h3
+          className={
+            feature
+              ? "text-[1.375rem] font-semibold leading-tight tracking-[-0.02em] text-heading"
+              : "text-[1.0625rem] font-semibold leading-snug tracking-[-0.01em] text-heading"
+          }
+        >
+          {p.title}
+        </h3>
+
+        <p className="mt-1.5 max-w-[68ch] text-[0.9375rem] leading-[1.6] text-ink-2">
+          {p.blurb}
+        </p>
+
+        {feature && p.points ? (
+          <ul className="mt-4 grid list-none gap-x-10 gap-y-2 p-0 sm:grid-cols-2">
+            {p.points.map((pt) => (
+              <li
+                key={pt}
+                className="relative pl-4 text-[0.875rem] leading-[1.55] text-ink-2 before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2 before:bg-brand"
+              >
+                {pt}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-[0.6875rem] uppercase tracking-[0.1em] text-ink-3">
+            {p.tags.map((t) => (
+              <span key={t} className={t === filter ? "text-brand" : undefined}>
+                {t}
+              </span>
+            ))}
+          </div>
+
+          {post ? (
+            <Link
+              href={`/blog/${post.slug}`}
+              className="link-rule inline-flex items-center gap-1 text-[0.75rem] text-brand"
+            >
+              How it was built
+              <Icon name="arrow-up-right" className="h-3 w-3" />
+            </Link>
+          ) : null}
+        </div>
+      </div>
+
+      {p.stat ? (
+        <div className="md:text-right">
+          <span className="block text-[1.5rem] font-semibold leading-none tracking-[-0.035em] text-heading tabular-nums">
+            {p.stat.value}
+          </span>
+          <span className="mt-1.5 block text-[0.75rem] leading-snug text-ink-3">
+            {p.stat.label}
+          </span>
+        </div>
+      ) : null}
+    </article>
   );
 }
 

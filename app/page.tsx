@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <Work />
+      <Work posts={posts} />
       {projects.length > 0 ? (
         <Projects
           projects={(featured.length ? featured : projects).slice(0, 4)}

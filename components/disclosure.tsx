@@ -23,7 +23,7 @@ export function Disclosure({ open, onToggle, summary, children, label }: Props) 
   return (
     <div
       data-open={open}
-      className="group border-b border-rule-hair transition-colors duration-200 data-[open=true]:bg-paper-2 data-[open=true]:shadow-[inset_2px_0_0_var(--brand)]"
+      className="group border-b border-rule-hair transition-colors duration-300 data-[open=true]:shadow-[inset_2px_0_0_var(--brand)]"
     >
       <button
         type="button"
@@ -45,7 +45,9 @@ export function Disclosure({ open, onToggle, summary, children, label }: Props) 
         data-open={open}
       >
         <div className="overflow-hidden">
-          <div className="pb-7 pr-1">{children}</div>
+          <div className="pb-7 pr-1 transition-[padding] duration-200 group-data-[open=true]:pl-4">
+            {children}
+          </div>
         </div>
       </div>
     </div>

@@ -18,7 +18,7 @@ export function ProjectIndex({ projects }: { projects: ProjectMeta[] }) {
 
   if (projects.length === 0) {
     return (
-      <p className="border-t border-rule py-8 text-ink-2">
+      <p className="border-t border-rule-hair py-8 text-ink-2">
         Nothing published here yet — the work in this section is still in
         progress. The <a href="/#work" className="link-rule text-brand">production
         work</a> is the fuller picture for now.
@@ -43,7 +43,7 @@ export function ProjectIndex({ projects }: { projects: ProjectMeta[] }) {
         ))}
       </div>
 
-      <div className="border-t border-rule">
+      <div className="border-t border-rule-hair">
         {shown.map((p) => (
           <ProjectRow key={p.slug} project={p} />
         ))}
@@ -153,7 +153,7 @@ function Chip({
       className={`cursor-pointer border px-2.5 py-1 text-[11px] uppercase tracking-[0.09em] transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
         active
           ? "border-heading bg-heading text-background"
-          : "border-rule-hair text-ink-3 hover:border-rule hover:text-heading"
+          : "border-rule-hair text-ink-3 hover:border-rule-hair hover:text-heading"
       }`}
     >
       {children}

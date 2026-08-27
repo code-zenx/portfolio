@@ -3,7 +3,7 @@ import { profile } from "@/config/site";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-rule">
+    <footer className="mt-auto border-t border-rule-hair">
       <div className="mx-auto flex max-w-[1080px] flex-wrap justify-between gap-3 px-5 pb-8 pt-5 text-[12px] tracking-[0.04em] text-ink-3 md:px-10">
         <span>
           © {new Date().getFullYear()} {profile.name}

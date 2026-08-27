@@ -10,7 +10,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/features/theme/theme-toggle";
-import { ScrollMeter } from "@/components/scroll-meter";
 import { PALETTE_OPEN } from "@/features/command-palette/command-menu";
 import { nav, profile } from "@/config/site";
 
@@ -18,8 +17,8 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-rule bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1080px] items-center justify-between gap-6 px-5 py-3 md:px-10">
+    <header className="sticky top-0 z-30 border-b border-rule-hair bg-background/90 backdrop-blur-md">
+      <div className="mx-auto flex h-[calc(var(--header-h)-1px)] max-w-[1080px] items-center justify-between gap-6 px-5 md:px-10">
         <Link
           href="/"
           className="link-rule text-[13px] font-semibold uppercase tracking-[0.1em]"
@@ -44,7 +43,7 @@ export function SiteHeader() {
             type="button"
             onClick={() => window.dispatchEvent(new Event(PALETTE_OPEN))}
             aria-label="Open command menu"
-            className="flex h-7 items-center gap-2 border border-rule-hair px-2 text-ink-3 transition-colors hover:border-rule hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            className="flex h-7 items-center gap-2 border border-rule-hair px-2 text-ink-3 transition-colors hover:border-rule-hair hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           >
             <Icon name="search" className="h-3.5 w-3.5" />
             <span className="hidden text-[10.5px] tracking-[0.1em] sm:inline">
@@ -63,10 +62,10 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent
               side="right"
-              className="border-l border-rule bg-background"
+              className="border-l border-rule-hair bg-background"
             >
               <SheetTitle className="label px-5 pt-5">Menu</SheetTitle>
-              <nav className="mt-6 flex flex-col border-t border-rule">
+              <nav className="mt-6 flex flex-col border-t border-rule-hair">
                 {nav.map((item) => (
                   <Link
                     key={item.href}
@@ -82,8 +81,6 @@ export function SiteHeader() {
           </Sheet>
         </div>
       </div>
-
-      <ScrollMeter />
     </header>
   );
 }

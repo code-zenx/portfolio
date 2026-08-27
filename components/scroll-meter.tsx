@@ -45,9 +45,12 @@ export function ScrollMeter() {
     <div
       ref={ref}
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 bottom-[-1px]"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 h-6"
     >
-      <span className="scroll-meter block h-px bg-brand" />
+      {/* the track the rider travels along — at the top of the page this was
+          borrowed from the header's bottom border */}
+      <span className="absolute inset-x-0 bottom-0 h-px bg-rule-hair" />
+      <span className="scroll-meter absolute inset-x-0 bottom-0 h-px bg-brand" />
       <span className="scroll-rider absolute bottom-px block">
         <Motorcycle className="h-[22px] w-[38px] text-heading" />
       </span>

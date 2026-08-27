@@ -46,7 +46,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
 
   return (
     <article>
-      <header className="border-b border-rule">
+      <header>
         <div className="mx-auto max-w-[1080px] px-5 pb-11 pt-16 md:px-10">
           <Link
             href="/projects"
@@ -68,7 +68,7 @@ export default async function ProjectPage(props: PageProps<"/projects/[slug]">) 
             <p className="mt-4 max-w-[54ch] text-lg text-ink-2">{project.tagline}</p>
           ) : null}
 
-          <div className="mt-8 flex flex-wrap gap-x-7 gap-y-2 border-t border-rule pt-4 text-[12px] uppercase tracking-[0.08em] text-ink-3">
+          <div className="mt-8 flex flex-wrap gap-x-7 gap-y-2 border-t border-rule-hair pt-4 text-[12px] uppercase tracking-[0.08em] text-ink-3">
             {project.tags.map((t) => (
               <span key={t}>{t}</span>
             ))}
