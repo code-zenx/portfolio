@@ -33,8 +33,15 @@ export type Project = {
    * is published, so an unwritten write-up never leaves a dead link.
    */
   writeup?: string;
-  /** Capability bullets. Only shown on the feature row. */
+  /** Capability bullets. Shown on any row that has them. */
   points?: string[];
+  /**
+   * Retirement switch. Omit (or true) to show the row; set false to take it
+   * off the page without deleting it. As the list grows, older work gets
+   * retired rather than removed — the wording stays here to come back to,
+   * and `see` links in `roles` skip a row that is no longer visible.
+   */
+  visible?: boolean;
   title: string;
   blurb: string;
   tags: string[];
@@ -150,108 +157,131 @@ export const facts: Fact[] = [
 ];
 
 export const projects: Project[] = [
+  // Seven rows, one altitude. The previous twelve mixed a platform, its own
+  // subsystems, and single features as if they were peers — so a reader could
+  // not tell that "AI pipeline orchestration" lived inside "Universe". A row
+  // earns its place by standing alone; anything that is a part of something
+  // already listed became `points` on its parent, with its tags carried up so
+  // the filter surface survives the merge.
   {
     id: "universe",
     badge: "Flagship",
     feature: true,
-    points: [
-      "Roles alone could not express per-resource access, so RBAC gained an attribute layer across org / workspace / service",
-      "Usage-metered billing: plans, add-ons, top-ups, per-service consumption",
-      "Structured logging and distributed tracing on OpenObserve",
-      "Docker containerisation and Slack-routed incident alerting",
-    ],
+    visible: true,
     title: "Universe — unified enterprise platform",
     blurb:
-      "Consolidated four standalone products — video dubbing, subtitling, playground and design-file translation — into one multi-tenant system. Enabled the company's first enterprise partnership deals.",
-    tags: ["NestJS", "PostgreSQL", "Multi-tenant", "RBAC + ABAC"],
+      "Consolidated four standalone products — video dubbing, subtitling, playground and design-file translation — into one multi-tenant system, so the company could sell a suite rather than separate tools.",
+    points: [
+      "Roles alone could not express per-resource access, so RBAC gained an attribute layer across org, workspace and service",
+      "Per-org entitlements above member permissions, with usage-metered credits on an append-only ledger",
+      "Transcription, translation and synthesis modelled as Conductor OSS workflows, each stage retrying and resuming on its own",
+      "Structured logging and distributed tracing on OpenObserve, Docker packaging, Slack-routed alerting",
+    ],
+    tags: [
+      "NestJS",
+      "PostgreSQL",
+      "Multi-tenant",
+      "RBAC + ABAC",
+      "Conductor OSS",
+      "TypeScript",
+    ],
     stat: { value: "4", label: "products consolidated" },
   },
   {
     id: "editor",
     badge: "Long-form",
-    title: "Long-form video editor",
+    visible: true,
+    title: "Translate.Video — dubbing editor and player engine",
     blurb:
-      "Moved video, audio and background-audio processing into Web Workers with OffscreenCanvas frame rendering, and added timestamp-range timeline virtualization with paginated infinite scroll, so load time stays flat as projects grow.",
-    tags: ["Web Workers", "OffscreenCanvas", "React", "Virtualization"],
+      "Four generations of player — raw canvas, Fabric, Konva, Remotion — collapsed into one engine coordinating playback, transcript sync and timeline state as a single managed system.",
+    points: [
+      "Frame-accurate rendering migrated to Mediabunny for the frame-level seeking dubbing and subtitle alignment require",
+      "Decode and paint moved off the main thread, so a React render can no longer stall a frame",
+      "Three-hour projects carried on timestamp-keyed infinite scroll and virtualization across transcript and timeline",
+      "Video, dubs and background music cached separately — byte ranges, blob URLs, LRU chunks — matched to what each costs",
+    ],
+    tags: [
+      "React",
+      "TypeScript",
+      "Mediabunny",
+      "Remotion",
+      "Web Workers",
+      "Virtualization",
+    ],
   },
   {
-    id: "player",
-    badge: "Frame-accurate",
-    title: "Video player engine",
-    blurb:
-      "A purpose-built engine coordinating playback, transcript sync and timeline state as one managed system, with frame-accurate rendering migrated from Remotion to Mediabunny for the frame-level seeking dubbing and subtitle alignment require.",
-    tags: ["Mediabunny", "Remotion", "Video.js", "TypeScript"],
-  },
-  {
-    id: "translation-memory",
-    badge: "In-house service",
-    title: "Translation memory service",
-    blurb:
-      "A standalone service with its own storage and matching model, not a feature living inside one product: segment-level reuse of previously translated content, consumed across the product line so repeated material stops paying for inference twice.",
-    tags: ["Service design", "PostgreSQL", "Segmentation", "Inference cost"],
-  },
-  {
-    id: "photo-agents",
+    id: "photo",
     badge: "Agentic",
-    title: "Translate.Photo — multi-agent image resizing",
+    visible: true,
+    title: "Translate.Photo — multi-agent design adaptation",
     blurb:
-      "Knowledge extraction (OCR, brand and design element detection) → layout planning per target aspect ratio → image generation → automated QA that re-runs extraction to catch hallucinations and typos before triggering targeted fixes.",
-    tags: ["Multi-agent", "OCR", "LLMs", "Python"],
-  },
-  {
-    id: "subtitles",
-    badge: "ASS format",
-    title: "Animated subtitles",
-    blurb:
-      "ASS-format subtitle rendering with per-word karaoke timing, positioning and styling, aligned to the frame-accurate playback the dubbing editor depends on.",
-    tags: ["ASS", "Canvas", "Frame timing", "Localization"],
+      "Knowledge extraction (OCR, brand and design element detection) → layout planning per target aspect ratio → generation → automated QA that re-runs extraction to catch hallucinations before triggering targeted fixes.",
+    points: [
+      "Native Photoshop and Illustrator plugins replaced the web editor, which enterprise files and workflows required",
+      "PSD translation with bulk processing and multi-language output, plus Word, PowerPoint and Canva as deals demanded each",
+      "Text expansion solved with a reflow algorithm that handles translated strings of differing lengths, rather than truncating",
+    ],
+    tags: [
+      "Multi-agent",
+      "LLMs",
+      "OCR",
+      "Python",
+      "Adobe UXP",
+      "TypeScript",
+      "Layout",
+    ],
   },
   {
     id: "short-video",
     badge: "Generative",
-    title: "Short.Video — agentic video generation",
+    visible: true,
+    title: "Short.Video — generative and personalized video",
     blurb:
-      "LangChain pipelines for document ingestion, script generation and multi-scene video generation via Kling and Veo 3, holding scene and clip continuity across long-form output.",
-    tags: ["LangChain", "Kling", "Veo 3", "RAG"],
-  },
-  {
-    id: "personalized-video",
-    badge: "GPU pipeline",
-    title: "Short.Video — personalized video platform",
-    blurb:
-      "Programmatic image overlays, with voice synthesis and LatentSync lip-sync wired in through vendor APIs, optimised with FFmpeg and GPU encoding in place of OpenCV, served through FastAPI with a managed queue for bulk generation and resource control.",
-    tags: ["FFmpeg", "FastAPI", "LatentSync", "GPU"],
-  },
-  {
-    id: "pipelines",
-    badge: "Async DAGs",
-    title: "AI pipeline orchestration",
-    blurb:
-      "Transcription → translation → synthesis modelled as Conductor OSS DAGs, so a stage fails and recovers on its own retry semantics without taking the whole job down, with per-stage observability across the run.",
-    tags: ["Conductor OSS", "DAGs", "Kafka", "BullMQ"],
+      "LangChain pipelines for document ingestion, script generation and multi-scene generation via Kling and Veo 3, holding scene and clip continuity across long-form output.",
+    points: [
+      "Personalized runs assemble programmatic overlays with synthesised voice and LatentSync lip-sync into WhatsApp-ready media",
+      "FFmpeg with GPU encoding replaced OpenCV, behind a managed queue so bulk generation could not starve the box",
+      "Served through FastAPI, with per-run resource control across the generation providers",
+    ],
+    tags: ["LangChain", "Kling", "Veo 3", "RAG", "FFmpeg", "FastAPI", "GPU", "Python"],
   },
   {
     id: "export",
     badge: "Parallel",
+    visible: true,
     title: "Video export pipeline",
     blurb:
-      "FFmpeg and canvas-based rendering combined with parallel processing, bringing export times down across varying video lengths.",
-    tags: ["FFmpeg", "Canvas", "Node.js"],
+      "FFmpeg and canvas-based rendering with parallel processing, benchmarked against open-source encoders before the rebuild, holding export times across varying video lengths.",
+    points: [
+      "ASS-format subtitle rendering with per-word karaoke timing, positioning and styling, burnt in as an optional export stage",
+      "Aligned to the frame-accurate playback the dubbing editor depends on, so preview and deliverable agree",
+    ],
+    tags: ["FFmpeg", "Canvas", "Node.js", "ASS", "Frame timing", "Localization"],
   },
   {
-    id: "psd",
-    badge: "Reflow",
-    title: "Photoshop file translation",
+    id: "translation-memory",
+    badge: "In-house service",
+    visible: true,
+    title: "Translation memory service",
     blurb:
-      "PSD translation with bulk processing and multi-language output, solving font loading and text-expansion layout with a reflow algorithm that handles translated strings of differing lengths and surfaces phrasing alternatives.",
-    tags: ["Adobe UXP", "TypeScript", "Layout"],
+      "A standalone service with its own storage and matching model, not a feature living inside one product: segment-level reuse of previously translated content, consumed across the product line so repeated material stops paying for inference twice.",
+    points: [
+      "Behind a provider interface, so the in-house engine and a commercial vendor back the same calls",
+      "Credentials resolved per organisation and deliberately non-inheriting — a child org never reads its parent's",
+    ],
+    tags: ["Service design", "PostgreSQL", "Segmentation", "Inference cost", "TypeScript"],
   },
   {
     id: "sale-rocket",
     badge: "Internal",
+    visible: true,
     title: "Sale Rocket — call analytics",
     blurb:
       "Sales-call analytics that transcribes and analyses calls, surfacing performance metrics and actionable follow-ups for the team.",
+    points: [
+      "Transcription models and LLMs benchmarked across the pipeline on a fixed evaluation set, then swapped on cost and accuracy",
+      "Survivors fine-tuned on domain data to hold quality after the swap",
+    ],
     tags: ["Python", "NLP", "LLMs"],
   },
 ];
@@ -324,7 +354,7 @@ export const roles: Role[] = [
           "Resolved each org's keys self, then parent, then platform — with a flag that forbids the platform fallback entirely.",
           "Kept credentials out of workflow payloads; workers fetch them just in time behind an internal shared secret.",
         ],
-        see: ["pipelines", "translation-memory"],
+        see: ["universe", "translation-memory"],
       },
       {
         // Orchestration is what runs; this is how it is kept honest. One
@@ -365,7 +395,7 @@ export const roles: Role[] = [
           "Cached video, dubs and background music separately — byte ranges, blob URLs, LRU chunks — matched to what each costs.",
           "Baked playback rate into audio bytes in a worker, so the player runs at 1x and never resamples the pitch.",
         ],
-        see: ["editor", "player"],
+        see: ["editor"],
       },
       {
         // Saying what is unfinished costs nothing and reads as someone running
@@ -396,7 +426,7 @@ export const roles: Role[] = [
           // "Shipped image creation and adaptive resizing as the product's two core capabilities.",
           "Architected resizing as four stages — extraction, layout planning, generation, then QA that re-runs extraction to catch hallucinations.",
         ],
-        see: ["photo-agents", "psd"],
+        see: ["photo"],
       },
       {
         label: "Short.Video",
@@ -406,7 +436,7 @@ export const roles: Role[] = [
           "Assembled personalized video from programmatic overlays, custom voice and lip-sync, stitched into WhatsApp-ready media.",
           "Swapped OpenCV for FFmpeg with GPU encoding, behind a queue so bulk runs could not starve the box.",
         ],
-        see: ["short-video", "personalized-video"],
+        see: ["short-video"],
       },
       {
         label: "On-prem, ICICI intranet",
@@ -463,7 +493,7 @@ export const roles: Role[] = [
       "Added the server's first test coverage, on the export paths and the core AI modules.",
       "Built the product's first observability layer — Prometheus, Loki, Grafana — including SQL-backed dashboards on monthly product metrics.",
     ],
-    see: ["export", "subtitles"],
+    see: ["export"],
   },
   {
     when: "Apr 2022 — Mar 2023",

@@ -13,7 +13,9 @@ const BULLET =
  * unknown id renders nothing rather than a dead anchor.
  */
 function ShippedAs({ ids }: { ids: string[] }) {
-  const rows = ids.flatMap((id) => projects.filter((p) => p.id === id));
+  const rows = ids.flatMap((id) =>
+    projects.filter((p) => p.id === id && p.visible !== false),
+  );
   if (rows.length === 0) return null;
 
   return (
