@@ -113,8 +113,14 @@ export const profile = {
   timezone: "IST · UTC+5:30",
   company: "Vitra.ai",
   status: "Open to interesting problems",
+  // Three consumers: the hero paragraph, the meta description, and the
+  // OpenGraph card. Google cuts a description near 155 characters, so a stack
+  // inventory here never reaches a search result — and the toolkit section
+  // lists those tools anyway. Deliberately names no employer or product: the
+  // work below dates, this should not. What it carries instead is altitude —
+  // the layer worked at, and an opinion about where the difficulty sits.
   deck:
-    "I build B2B AI localization products and the platforms they run on. Translate.Video end to end — React client, NestJS APIs, PostgreSQL, and multi-stage AI pipelines for speech, translation and lip-sync orchestrated on Conductor OSS — plus the multi-tenant platform, authorization and metered billing underneath.",
+    "Backend and distributed systems engineer on AI products. I build the layer underneath — multi-tenant authorization, metered billing, and long-running pipelines that fail and resume without losing work.",
   email: "siddhu200113@gmail.com",
   github: "https://github.com/code-zenx",
   linkedin: "https://www.linkedin.com/in/rathod-siddharth",
@@ -305,6 +311,7 @@ export const roles: Role[] = [
           "Own Translate.Video end to end, the company's highest-revenue product.",
           "Kept core engineering — engine, pipeline, data model — and gave feature rewrites and parts of the API to juniors.",
           "Grew three juniors through the work: API design, caching and prefetch, browser storage, and the authorization layer.",
+          "Own the technical roadmap, and take the escalation when an enterprise client needs an engineer rather than an account manager.",
                     // Parked — the third bullet about this same lint check. The authorization
           // stream explains the mechanism better (the guard passes through, CI is what
           // closes it), and Leading reads stronger as four bullets purely about people.
@@ -441,9 +448,12 @@ export const roles: Role[] = [
       {
         label: "On-prem, ICICI intranet",
         items: [
-          "Shipped the meeting-transcription product into ICICI's intranet, web app through AI pipeline, since the audio could not leave their network.",
+          "Shipped the meeting-transcription product into ICICI's air-gapped intranet, web app through AI pipeline, since audio could not leave it.",
           "Split nine-hour recordings into chunks sized to 16GB of VRAM, then reassembled the transcript across the boundaries.",
           "Fed Whisper clean speech — noise reduction, then Demucs splitting dialogue from effects — fine-tuned and served on their hardware.",
+          "Chose parameter-efficient or full fine-tuning per model, against the VRAM the client's hardware actually had.",
+          "Versioned each fine-tuned model against the config and dataset that produced it, and retrained on what production showed.",
+          "Batched requests and parallelised GPU inference so one client box carried the load a cluster would normally take.",
           "Routed HTTP through an ALB at Layer 7, and the pipeline through an NLB at Layer 4 for static IPs.",
           "Packaged the stack as Docker images so releases into an environment with no managed services stayed repeatable.",
           "Rebuilt flat roles into a scoped hierarchy: super admin across the estate, admin over a single team, editor below.",
@@ -486,12 +496,14 @@ export const roles: Role[] = [
     detail: "Translate.Video across frontend, backend and the core AI modules.",
     points: [
       "Picked the product up after departures and kept client features shipping on a fixed intake-to-release cadence.",
-      "Moved datastore, roles, memberships and access tokens off DynamoDB onto Postgres, one table family per migration.",
+      "Moved datastore, roles, memberships and access tokens off DynamoDB onto Postgres with no downtime, one family per migration.",
+      "Built the core speech, synthesis and translation modules with parallel and series execution modes in the process manager.",
       "Extended the existing pipeline into the first phase of Translate.Photo, solving text expansion with a reflow algorithm rather than truncating.",
       "Rebuilt the export pipeline on FFmpeg and canvas rendering after benchmarking open-source encoders.",
       "Implemented styled subtitles on the ASS format — positioning, styling and karaoke-timed word highlighting.",
       "Added the server's first test coverage, on the export paths and the core AI modules.",
-      "Built the product's first observability layer — Prometheus, Loki, Grafana — including SQL-backed dashboards on monthly product metrics.",
+      "Built the product's first observability layer on Prometheus, Loki and Grafana, alerting on job failure and queue depth.",
+      "Put the monthly product metrics behind SQL-backed dashboards, so the business read them from one place.",
     ],
     see: ["export"],
   },
@@ -505,6 +517,7 @@ export const roles: Role[] = [
       "Built the APIs behind the dubbing editor, projects, teams and membership, and modelled the relational schema underneath them.",
       "Layered authentication and role-based access on that model, and used JSONB where per-client config would otherwise force a migration.",
       "Integrated Google and Microsoft translation, speech and transcription APIs — the first shape of today's AI pipeline.",
+      "Built keyboard navigation, ARIA semantics, focus states and captions into the product surface.",
     ],
   },
   {
@@ -515,7 +528,10 @@ export const roles: Role[] = [
     points: [
       "Built Voco Player, a white-labeled HTML5 video player with adaptive streaming, interactive overlays, playlists and ad insertion.",
       "Demoed it to Tata EdgeClass and Apollo Hospitals, which turned into a pilot engagement.",
-      "Built proofs of concept for clients, including a multilingual chatbot, alongside internal frontend and backend work.",
+      // Parked — "built proofs of concept, alongside internal frontend and
+      // backend work" says an intern did assorted work, which is what an
+      // intern does. Nothing here a senior reader weighs.
+      // "Built proofs of concept for clients, including a multilingual chatbot, alongside internal frontend and backend work.",
     ],
   },
   {
@@ -586,6 +602,9 @@ export const stack: StackBand[] = [
           "Evals & hallucination QA",
           "Model benchmarking & selection",
           "Fine-tuning on domain data",
+          "PyTorch / Hugging Face Transformers",
+          "LangChain",
+          "Model versioning & lineage",
           "RAG",
           "Speech & lip-sync vendor integration",
         ],
@@ -654,6 +673,8 @@ export const stack: StackBand[] = [
           "Redux Toolkit",
           "Web Workers",
           "OffscreenCanvas",
+          "Konva",
+          "Accessibility (ARIA, keyboard)",
           "Virtualization",
           "Mediabunny",
         ],
@@ -685,6 +706,11 @@ export const stack: StackBand[] = [
     groups: [
       {
         label: "Cloud & DevOps",
+        // AWS only, deliberately. Google's translation, speech and Gemini APIs
+        // are called from the pipeline, but nothing has ever been hosted on
+        // GCP — and a cloud named in this row reads as "I have run
+        // infrastructure here", which is a claim an interviewer will open.
+        // The API usage is already stated where it belongs, in the work.
         items: [
           "AWS",
           "Docker",
@@ -713,7 +739,10 @@ export const stack: StackBand[] = [
         label: "Testing",
         items: [
           "Jest",
-          "React Testing Library",
+          // Parked — a library-level detail under a row that already claims
+          // "Integration & E2E suites". Naming the renderer you test with is
+          // not a thing a senior reader weighs.
+          // "React Testing Library",
           "Cypress",
           "Integration & E2E suites",
         ],
