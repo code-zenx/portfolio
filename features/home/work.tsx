@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/icon/icon";
 import { Section } from "@/components/section";
 import { projects, type Project } from "@/config/site";
@@ -34,6 +34,24 @@ export function Work({ posts }: { posts: PostMeta[] }) {
     () => new Map(posts.map((p) => [p.slug, p])),
     [posts],
   );
+
+  // A "Shipped as" link from Experience can target a row that the truncation
+  // or an active filter has not rendered. Reveal it, then scroll — the browser
+  // gave up on the anchor before React put the row in the DOM.
+  useEffect(() => {
+    const reveal = () => {
+      const id = decodeURIComponent(window.location.hash.slice(1));
+      if (!id || !projects.some((p) => p.id === id)) return;
+      setFilter(null);
+      setExpanded(true);
+      requestAnimationFrame(() =>
+        document.getElementById(id)?.scrollIntoView({ block: "start" }),
+      );
+    };
+    reveal();
+    window.addEventListener("hashchange", reveal);
+    return () => window.removeEventListener("hashchange", reveal);
+  }, []);
 
   const matching = filter
     ? projects.filter((p) => p.tags.includes(filter))
@@ -113,11 +131,12 @@ function Row({
 }) {
   return (
     <article
+      id={p.id}
       /* Two columns, not three. The badge used to own a 100px column for a
          four-character word; it reads better as an eyebrow. The stat column
          only exists when there is a stat, so a row without one no longer
          leaves a hole on the right. */
-      className={`grid grid-cols-1 gap-x-10 gap-y-3 border-b border-rule-hair ${
+      className={`grid scroll-mt-[calc(var(--header-h)+1rem)] grid-cols-1 gap-x-10 gap-y-3 border-b border-rule-hair ${
         feature ? "py-8" : "py-6"
       } ${p.stat ? "md:grid-cols-[minmax(0,1fr)_140px]" : ""}`}
     >
