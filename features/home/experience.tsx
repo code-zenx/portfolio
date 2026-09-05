@@ -3,7 +3,30 @@
 import { useMemo, useState } from "react";
 import { Section } from "@/components/section";
 import { Disclosure } from "@/components/disclosure";
-import { roles, type Role } from "@/config/site";
+import { projects, roles, type Role } from "@/config/site";
+
+const BULLET =
+  "relative pl-4 text-[0.9375rem] leading-[1.6] text-ink-2 before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2 before:bg-ink-3";
+
+/**
+ * The bullet says what changed; the Work row says what the thing is. An
+ * unknown id renders nothing rather than a dead anchor.
+ */
+function ShippedAs({ ids }: { ids: string[] }) {
+  const rows = ids.flatMap((id) => projects.filter((p) => p.id === id));
+  if (rows.length === 0) return null;
+
+  return (
+    <p className="mt-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <span className="label">Shipped as</span>
+      {rows.map((p) => (
+        <a key={p.id} href={`#${p.id}`} className="link-rule text-[0.8125rem] text-brand">
+          {p.title}
+        </a>
+      ))}
+    </p>
+  );
+}
 
 /** Oldest role's start to newest role's end, for the employer header. */
 function tenure(group: Role[]): string {
@@ -86,17 +109,39 @@ export function Experience() {
                     </span>
                   }
                 >
-                  {r.points ? (
-                    <ul className="m-0 grid list-none gap-x-10 gap-y-1.5 p-0 lg:grid-cols-2">
-                      {r.points.map((pt) => (
-                        <li
-                          key={pt}
-                          className="relative pl-4 text-[0.9375rem] leading-[1.6] text-ink-2 before:absolute before:left-0 before:top-[0.7em] before:h-px before:w-2 before:bg-ink-3"
-                        >
-                          {pt}
-                        </li>
+                  {/* A busy year lists its work under the product it belonged
+                      to. Seven flat bullets read as one blur; the labels are
+                      what show the year spanned four products and an on-prem
+                      delivery. */}
+                  {r.streams ? (
+                    <div className="grid max-w-[76ch] gap-y-5">
+                      {r.streams.map((st) => (
+                        <div key={st.label}>
+                          <span className="label block text-heading">
+                            {st.label}
+                          </span>
+                          <ul className="m-0 mt-2 grid list-none gap-y-2 p-0">
+                            {st.items.map((pt) => (
+                              <li key={pt} className={BULLET}>
+                                {pt}
+                              </li>
+                            ))}
+                          </ul>
+                          {st.see ? <ShippedAs ids={st.see} /> : null}
+                        </div>
                       ))}
-                    </ul>
+                    </div>
+                  ) : r.points ? (
+                    <div className="max-w-[76ch]">
+                      <ul className="m-0 grid list-none gap-y-2 p-0">
+                        {r.points.map((pt) => (
+                          <li key={pt} className={BULLET}>
+                            {pt}
+                          </li>
+                        ))}
+                      </ul>
+                      {r.see ? <ShippedAs ids={r.see} /> : null}
+                    </div>
                   ) : null}
                 </Disclosure>
               );
