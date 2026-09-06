@@ -33,8 +33,15 @@ export type Project = {
    * is published, so an unwritten write-up never leaves a dead link.
    */
   writeup?: string;
-  /** Capability bullets. Only shown on the feature row. */
+  /** Capability bullets. Shown on any row that has them. */
   points?: string[];
+  /**
+   * Retirement switch. Omit (or true) to show the row; set false to take it
+   * off the page without deleting it. As the list grows, older work gets
+   * retired rather than removed — the wording stays here to come back to,
+   * and `see` links in `roles` skip a row that is no longer visible.
+   */
+  visible?: boolean;
   title: string;
   blurb: string;
   tags: string[];
@@ -106,8 +113,14 @@ export const profile = {
   timezone: "IST · UTC+5:30",
   company: "Vitra.ai",
   status: "Open to interesting problems",
+  // Three consumers: the hero paragraph, the meta description, and the
+  // OpenGraph card. Google cuts a description near 155 characters, so a stack
+  // inventory here never reaches a search result — and the toolkit section
+  // lists those tools anyway. Deliberately names no employer or product: the
+  // work below dates, this should not. What it carries instead is altitude —
+  // the layer worked at, and an opinion about where the difficulty sits.
   deck:
-    "I build B2B AI localization products and the platforms they run on. Translate.Video end to end — React client, NestJS APIs, PostgreSQL, and multi-stage AI pipelines for speech, translation and lip-sync orchestrated on Conductor OSS — plus the multi-tenant platform, authorization and metered billing underneath.",
+    "Backend and distributed systems engineer on AI products. I build the layer underneath — multi-tenant authorization, metered billing, and long-running pipelines that fail and resume without losing work.",
   email: "siddhu200113@gmail.com",
   github: "https://github.com/code-zenx",
   linkedin: "https://www.linkedin.com/in/rathod-siddharth",
@@ -150,108 +163,131 @@ export const facts: Fact[] = [
 ];
 
 export const projects: Project[] = [
+  // Seven rows, one altitude. The previous twelve mixed a platform, its own
+  // subsystems, and single features as if they were peers — so a reader could
+  // not tell that "AI pipeline orchestration" lived inside "Universe". A row
+  // earns its place by standing alone; anything that is a part of something
+  // already listed became `points` on its parent, with its tags carried up so
+  // the filter surface survives the merge.
   {
     id: "universe",
     badge: "Flagship",
     feature: true,
-    points: [
-      "Roles alone could not express per-resource access, so RBAC gained an attribute layer across org / workspace / service",
-      "Usage-metered billing: plans, add-ons, top-ups, per-service consumption",
-      "Structured logging and distributed tracing on OpenObserve",
-      "Docker containerisation and Slack-routed incident alerting",
-    ],
+    visible: true,
     title: "Universe — unified enterprise platform",
     blurb:
-      "Consolidated four standalone products — video dubbing, subtitling, playground and design-file translation — into one multi-tenant system. Enabled the company's first enterprise partnership deals.",
-    tags: ["NestJS", "PostgreSQL", "Multi-tenant", "RBAC + ABAC"],
+      "Consolidated four standalone products — video dubbing, subtitling, playground and design-file translation — into one multi-tenant system, so the company could sell a suite rather than separate tools.",
+    points: [
+      "Roles alone could not express per-resource access, so RBAC gained an attribute layer across org, workspace and service",
+      "Per-org entitlements above member permissions, with usage-metered credits on an append-only ledger",
+      "Transcription, translation and synthesis modelled as Conductor OSS workflows, each stage retrying and resuming on its own",
+      "Structured logging and distributed tracing on OpenObserve, Docker packaging, Slack-routed alerting",
+    ],
+    tags: [
+      "NestJS",
+      "PostgreSQL",
+      "Multi-tenant",
+      "RBAC + ABAC",
+      "Conductor OSS",
+      "TypeScript",
+    ],
     stat: { value: "4", label: "products consolidated" },
   },
   {
     id: "editor",
     badge: "Long-form",
-    title: "Long-form video editor",
+    visible: true,
+    title: "Translate.Video — dubbing editor and player engine",
     blurb:
-      "Moved video, audio and background-audio processing into Web Workers with OffscreenCanvas frame rendering, and added timestamp-range timeline virtualization with paginated infinite scroll, so load time stays flat as projects grow.",
-    tags: ["Web Workers", "OffscreenCanvas", "React", "Virtualization"],
+      "Four generations of player — raw canvas, Fabric, Konva, Remotion — collapsed into one engine coordinating playback, transcript sync and timeline state as a single managed system.",
+    points: [
+      "Frame-accurate rendering migrated to Mediabunny for the frame-level seeking dubbing and subtitle alignment require",
+      "Decode and paint moved off the main thread, so a React render can no longer stall a frame",
+      "Three-hour projects carried on timestamp-keyed infinite scroll and virtualization across transcript and timeline",
+      "Video, dubs and background music cached separately — byte ranges, blob URLs, LRU chunks — matched to what each costs",
+    ],
+    tags: [
+      "React",
+      "TypeScript",
+      "Mediabunny",
+      "Remotion",
+      "Web Workers",
+      "Virtualization",
+    ],
   },
   {
-    id: "player",
-    badge: "Frame-accurate",
-    title: "Video player engine",
-    blurb:
-      "A purpose-built engine coordinating playback, transcript sync and timeline state as one managed system, with frame-accurate rendering migrated from Remotion to Mediabunny for the frame-level seeking dubbing and subtitle alignment require.",
-    tags: ["Mediabunny", "Remotion", "Video.js", "TypeScript"],
-  },
-  {
-    id: "translation-memory",
-    badge: "In-house service",
-    title: "Translation memory service",
-    blurb:
-      "A standalone service with its own storage and matching model, not a feature living inside one product: segment-level reuse of previously translated content, consumed across the product line so repeated material stops paying for inference twice.",
-    tags: ["Service design", "PostgreSQL", "Segmentation", "Inference cost"],
-  },
-  {
-    id: "photo-agents",
+    id: "photo",
     badge: "Agentic",
-    title: "Translate.Photo — multi-agent image resizing",
+    visible: true,
+    title: "Translate.Photo — multi-agent design adaptation",
     blurb:
-      "Knowledge extraction (OCR, brand and design element detection) → layout planning per target aspect ratio → image generation → automated QA that re-runs extraction to catch hallucinations and typos before triggering targeted fixes.",
-    tags: ["Multi-agent", "OCR", "LLMs", "Python"],
-  },
-  {
-    id: "subtitles",
-    badge: "ASS format",
-    title: "Animated subtitles",
-    blurb:
-      "ASS-format subtitle rendering with per-word karaoke timing, positioning and styling, aligned to the frame-accurate playback the dubbing editor depends on.",
-    tags: ["ASS", "Canvas", "Frame timing", "Localization"],
+      "Knowledge extraction (OCR, brand and design element detection) → layout planning per target aspect ratio → generation → automated QA that re-runs extraction to catch hallucinations before triggering targeted fixes.",
+    points: [
+      "Native Photoshop and Illustrator plugins replaced the web editor, which enterprise files and workflows required",
+      "PSD translation with bulk processing and multi-language output, plus Word, PowerPoint and Canva as deals demanded each",
+      "Text expansion solved with a reflow algorithm that handles translated strings of differing lengths, rather than truncating",
+    ],
+    tags: [
+      "Multi-agent",
+      "LLMs",
+      "OCR",
+      "Python",
+      "Adobe UXP",
+      "TypeScript",
+      "Layout",
+    ],
   },
   {
     id: "short-video",
     badge: "Generative",
-    title: "Short.Video — agentic video generation",
+    visible: true,
+    title: "Short.Video — generative and personalized video",
     blurb:
-      "LangChain pipelines for document ingestion, script generation and multi-scene video generation via Kling and Veo 3, holding scene and clip continuity across long-form output.",
-    tags: ["LangChain", "Kling", "Veo 3", "RAG"],
-  },
-  {
-    id: "personalized-video",
-    badge: "GPU pipeline",
-    title: "Short.Video — personalized video platform",
-    blurb:
-      "Programmatic image overlays, with voice synthesis and LatentSync lip-sync wired in through vendor APIs, optimised with FFmpeg and GPU encoding in place of OpenCV, served through FastAPI with a managed queue for bulk generation and resource control.",
-    tags: ["FFmpeg", "FastAPI", "LatentSync", "GPU"],
-  },
-  {
-    id: "pipelines",
-    badge: "Async DAGs",
-    title: "AI pipeline orchestration",
-    blurb:
-      "Transcription → translation → synthesis modelled as Conductor OSS DAGs, so a stage fails and recovers on its own retry semantics without taking the whole job down, with per-stage observability across the run.",
-    tags: ["Conductor OSS", "DAGs", "Kafka", "BullMQ"],
+      "LangChain pipelines for document ingestion, script generation and multi-scene generation via Kling and Veo 3, holding scene and clip continuity across long-form output.",
+    points: [
+      "Personalized runs assemble programmatic overlays with synthesised voice and LatentSync lip-sync into WhatsApp-ready media",
+      "FFmpeg with GPU encoding replaced OpenCV, behind a managed queue so bulk generation could not starve the box",
+      "Served through FastAPI, with per-run resource control across the generation providers",
+    ],
+    tags: ["LangChain", "Kling", "Veo 3", "RAG", "FFmpeg", "FastAPI", "GPU", "Python"],
   },
   {
     id: "export",
     badge: "Parallel",
+    visible: true,
     title: "Video export pipeline",
     blurb:
-      "FFmpeg and canvas-based rendering combined with parallel processing, bringing export times down across varying video lengths.",
-    tags: ["FFmpeg", "Canvas", "Node.js"],
+      "FFmpeg and canvas-based rendering with parallel processing, benchmarked against open-source encoders before the rebuild, holding export times across varying video lengths.",
+    points: [
+      "ASS-format subtitle rendering with per-word karaoke timing, positioning and styling, burnt in as an optional export stage",
+      "Aligned to the frame-accurate playback the dubbing editor depends on, so preview and deliverable agree",
+    ],
+    tags: ["FFmpeg", "Canvas", "Node.js", "ASS", "Frame timing", "Localization"],
   },
   {
-    id: "psd",
-    badge: "Reflow",
-    title: "Photoshop file translation",
+    id: "translation-memory",
+    badge: "In-house service",
+    visible: true,
+    title: "Translation memory service",
     blurb:
-      "PSD translation with bulk processing and multi-language output, solving font loading and text-expansion layout with a reflow algorithm that handles translated strings of differing lengths and surfaces phrasing alternatives.",
-    tags: ["Adobe UXP", "TypeScript", "Layout"],
+      "A standalone service with its own storage and matching model, not a feature living inside one product: segment-level reuse of previously translated content, consumed across the product line so repeated material stops paying for inference twice.",
+    points: [
+      "Behind a provider interface, so the in-house engine and a commercial vendor back the same calls",
+      "Credentials resolved per organisation and deliberately non-inheriting — a child org never reads its parent's",
+    ],
+    tags: ["Service design", "PostgreSQL", "Segmentation", "Inference cost", "TypeScript"],
   },
   {
     id: "sale-rocket",
     badge: "Internal",
+    visible: true,
     title: "Sale Rocket — call analytics",
     blurb:
       "Sales-call analytics that transcribes and analyses calls, surfacing performance metrics and actionable follow-ups for the team.",
+    points: [
+      "Transcription models and LLMs benchmarked across the pipeline on a fixed evaluation set, then swapped on cost and accuracy",
+      "Survivors fine-tuned on domain data to hold quality after the swap",
+    ],
     tags: ["Python", "NLP", "LLMs"],
   },
 ];
@@ -275,6 +311,7 @@ export const roles: Role[] = [
           "Own Translate.Video end to end, the company's highest-revenue product.",
           "Kept core engineering — engine, pipeline, data model — and gave feature rewrites and parts of the API to juniors.",
           "Grew three juniors through the work: API design, caching and prefetch, browser storage, and the authorization layer.",
+          "Own the technical roadmap, and take the escalation when an enterprise client needs an engineer rather than an account manager.",
                     // Parked — the third bullet about this same lint check. The authorization
           // stream explains the mechanism better (the guard passes through, CI is what
           // closes it), and Leading reads stronger as four bullets purely about people.
@@ -324,7 +361,7 @@ export const roles: Role[] = [
           "Resolved each org's keys self, then parent, then platform — with a flag that forbids the platform fallback entirely.",
           "Kept credentials out of workflow payloads; workers fetch them just in time behind an internal shared secret.",
         ],
-        see: ["pipelines", "translation-memory"],
+        see: ["universe", "translation-memory"],
       },
       {
         // Orchestration is what runs; this is how it is kept honest. One
@@ -365,7 +402,7 @@ export const roles: Role[] = [
           "Cached video, dubs and background music separately — byte ranges, blob URLs, LRU chunks — matched to what each costs.",
           "Baked playback rate into audio bytes in a worker, so the player runs at 1x and never resamples the pitch.",
         ],
-        see: ["editor", "player"],
+        see: ["editor"],
       },
       {
         // Saying what is unfinished costs nothing and reads as someone running
@@ -396,7 +433,7 @@ export const roles: Role[] = [
           // "Shipped image creation and adaptive resizing as the product's two core capabilities.",
           "Architected resizing as four stages — extraction, layout planning, generation, then QA that re-runs extraction to catch hallucinations.",
         ],
-        see: ["photo-agents", "psd"],
+        see: ["photo"],
       },
       {
         label: "Short.Video",
@@ -406,14 +443,17 @@ export const roles: Role[] = [
           "Assembled personalized video from programmatic overlays, custom voice and lip-sync, stitched into WhatsApp-ready media.",
           "Swapped OpenCV for FFmpeg with GPU encoding, behind a queue so bulk runs could not starve the box.",
         ],
-        see: ["short-video", "personalized-video"],
+        see: ["short-video"],
       },
       {
         label: "On-prem, ICICI intranet",
         items: [
-          "Shipped the meeting-transcription product into ICICI's intranet, web app through AI pipeline, since the audio could not leave their network.",
+          "Shipped the meeting-transcription product into ICICI's air-gapped intranet, web app through AI pipeline, since audio could not leave it.",
           "Split nine-hour recordings into chunks sized to 16GB of VRAM, then reassembled the transcript across the boundaries.",
           "Fed Whisper clean speech — noise reduction, then Demucs splitting dialogue from effects — fine-tuned and served on their hardware.",
+          "Chose parameter-efficient or full fine-tuning per model, against the VRAM the client's hardware actually had.",
+          "Versioned each fine-tuned model against the config and dataset that produced it, and retrained on what production showed.",
+          "Batched requests and parallelised GPU inference so one client box carried the load a cluster would normally take.",
           "Routed HTTP through an ALB at Layer 7, and the pipeline through an NLB at Layer 4 for static IPs.",
           "Packaged the stack as Docker images so releases into an environment with no managed services stayed repeatable.",
           "Rebuilt flat roles into a scoped hierarchy: super admin across the estate, admin over a single team, editor below.",
@@ -456,14 +496,16 @@ export const roles: Role[] = [
     detail: "Translate.Video across frontend, backend and the core AI modules.",
     points: [
       "Picked the product up after departures and kept client features shipping on a fixed intake-to-release cadence.",
-      "Moved datastore, roles, memberships and access tokens off DynamoDB onto Postgres, one table family per migration.",
+      "Moved datastore, roles, memberships and access tokens off DynamoDB onto Postgres with no downtime, one family per migration.",
+      "Built the core speech, synthesis and translation modules with parallel and series execution modes in the process manager.",
       "Extended the existing pipeline into the first phase of Translate.Photo, solving text expansion with a reflow algorithm rather than truncating.",
       "Rebuilt the export pipeline on FFmpeg and canvas rendering after benchmarking open-source encoders.",
       "Implemented styled subtitles on the ASS format — positioning, styling and karaoke-timed word highlighting.",
       "Added the server's first test coverage, on the export paths and the core AI modules.",
-      "Built the product's first observability layer — Prometheus, Loki, Grafana — including SQL-backed dashboards on monthly product metrics.",
+      "Built the product's first observability layer on Prometheus, Loki and Grafana, alerting on job failure and queue depth.",
+      "Put the monthly product metrics behind SQL-backed dashboards, so the business read them from one place.",
     ],
-    see: ["export", "subtitles"],
+    see: ["export"],
   },
   {
     when: "Apr 2022 — Mar 2023",
@@ -475,6 +517,7 @@ export const roles: Role[] = [
       "Built the APIs behind the dubbing editor, projects, teams and membership, and modelled the relational schema underneath them.",
       "Layered authentication and role-based access on that model, and used JSONB where per-client config would otherwise force a migration.",
       "Integrated Google and Microsoft translation, speech and transcription APIs — the first shape of today's AI pipeline.",
+      "Built keyboard navigation, ARIA semantics, focus states and captions into the product surface.",
     ],
   },
   {
@@ -485,7 +528,10 @@ export const roles: Role[] = [
     points: [
       "Built Voco Player, a white-labeled HTML5 video player with adaptive streaming, interactive overlays, playlists and ad insertion.",
       "Demoed it to Tata EdgeClass and Apollo Hospitals, which turned into a pilot engagement.",
-      "Built proofs of concept for clients, including a multilingual chatbot, alongside internal frontend and backend work.",
+      // Parked — "built proofs of concept, alongside internal frontend and
+      // backend work" says an intern did assorted work, which is what an
+      // intern does. Nothing here a senior reader weighs.
+      // "Built proofs of concept for clients, including a multilingual chatbot, alongside internal frontend and backend work.",
     ],
   },
   {
@@ -556,6 +602,9 @@ export const stack: StackBand[] = [
           "Evals & hallucination QA",
           "Model benchmarking & selection",
           "Fine-tuning on domain data",
+          "PyTorch / Hugging Face Transformers",
+          "LangChain",
+          "Model versioning & lineage",
           "RAG",
           "Speech & lip-sync vendor integration",
         ],
@@ -624,6 +673,8 @@ export const stack: StackBand[] = [
           "Redux Toolkit",
           "Web Workers",
           "OffscreenCanvas",
+          "Konva",
+          "Accessibility (ARIA, keyboard)",
           "Virtualization",
           "Mediabunny",
         ],
@@ -655,6 +706,11 @@ export const stack: StackBand[] = [
     groups: [
       {
         label: "Cloud & DevOps",
+        // AWS only, deliberately. Google's translation, speech and Gemini APIs
+        // are called from the pipeline, but nothing has ever been hosted on
+        // GCP — and a cloud named in this row reads as "I have run
+        // infrastructure here", which is a claim an interviewer will open.
+        // The API usage is already stated where it belongs, in the work.
         items: [
           "AWS",
           "Docker",
@@ -683,7 +739,10 @@ export const stack: StackBand[] = [
         label: "Testing",
         items: [
           "Jest",
-          "React Testing Library",
+          // Parked — a library-level detail under a row that already claims
+          // "Integration & E2E suites". Naming the renderer you test with is
+          // not a thing a senior reader weighs.
+          // "React Testing Library",
           "Cypress",
           "Integration & E2E suites",
         ],

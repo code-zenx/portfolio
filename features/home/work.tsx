@@ -10,23 +10,35 @@ import type { PostMeta } from "@/features/blog/posts.server";
 /** Rows shown before "show all". Keeps the section a scan, not a scroll. */
 const HOME_LIMIT = 5;
 
+/** Filter chips offered. Enough to browse by, short of a second navigation. */
+const TAG_CHIPS = 12;
+
 export function Work({ posts }: { posts: PostMeta[] }) {
   const [filter, setFilter] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
 
-  // A chip per tag meant 17 controls filtering 6 rows. Only tags that
-  // actually split the set are worth a control.
+  // A retired row is off the page entirely — not counted, not filterable,
+  // not linkable from Experience.
+  const live = useMemo(() => projects.filter((p) => p.visible !== false), []);
+
+  // Chips are how a reader asks "which of these is the Python one" — so a tag
+  // that narrows to a single row still earns a control now that there are
+  // seven rows rather than twelve. Ordered by how many rows carry it, so the
+  // broad cuts come first and the specific ones follow.
   const tags = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const p of projects) {
+    for (const p of live) {
       for (const t of p.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
     }
     return [...counts.entries()]
-      .filter(([, n]) => n > 1)
-      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-      .slice(0, 6)
+      // Sort is stable, so tags on the same number of rows keep insertion
+      // order — first appearance, and each row lists its defining tag first.
+      // Alphabetical would have truncated the list at "G", dropping React
+      // and NestJS while keeping "Frame timing".
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, TAG_CHIPS)
       .map(([t]) => t);
-  }, []);
+  }, [live]);
 
   // Only link a write-up that actually exists and is published — a slug
   // pointing at a draft or a deleted post would otherwise 404.
@@ -41,7 +53,7 @@ export function Work({ posts }: { posts: PostMeta[] }) {
   useEffect(() => {
     const reveal = () => {
       const id = decodeURIComponent(window.location.hash.slice(1));
-      if (!id || !projects.some((p) => p.id === id)) return;
+      if (!id || !live.some((p) => p.id === id)) return;
       setFilter(null);
       setExpanded(true);
       requestAnimationFrame(() =>
@@ -51,11 +63,9 @@ export function Work({ posts }: { posts: PostMeta[] }) {
     reveal();
     window.addEventListener("hashchange", reveal);
     return () => window.removeEventListener("hashchange", reveal);
-  }, []);
+  }, [live]);
 
-  const matching = filter
-    ? projects.filter((p) => p.tags.includes(filter))
-    : projects;
+  const matching = filter ? live.filter((p) => p.tags.includes(filter)) : live;
 
   // Filtering has already narrowed the set, so don't truncate on top of it.
   const shown = filter || expanded ? matching : matching.slice(0, HOME_LIMIT);
@@ -66,7 +76,7 @@ export function Work({ posts }: { posts: PostMeta[] }) {
       id="work"
       label="Selected work"
       title="Things that run in production"
-      count={String(projects.length).padStart(2, "0")}
+      count={String(live.length).padStart(2, "0")}
     >
       <div className="mb-7 flex flex-wrap gap-1.5">
         <Chip active={filter === null} onClick={() => setFilter(null)}>
@@ -157,7 +167,7 @@ function Row({
           {p.blurb}
         </p>
 
-        {feature && p.points ? (
+        {p.points ? (
           <ul className="mt-4 grid list-none gap-x-10 gap-y-2 p-0 sm:grid-cols-2">
             {p.points.map((pt) => (
               <li
